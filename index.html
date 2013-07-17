@@ -1,0 +1,36 @@
+<!DOCTYPE>
+<html>
+  <head>
+    <title>本地调试环境</title>
+    <meta charset='utf8'/>
+    <script type="text/javascript">
+      require('coffee-script')
+      var http = require('http')
+      var app = require('./demo.coffee')
+      var CONFIG = require('./config.json');
+      var server;
+      window.onload = function () {
+        document.getElementById('start').onclick = function (event) {
+          event.target.disabled = true;
+          server = http.createServer(app).listen(CONFIG.port, function () {
+            console.log('listening:', CONFIG.port);
+            document.getElementById('stop').disabled = false;
+          });
+        }
+        document.getElementById('stop').onclick = function (event) {
+          event.target.disabled = true;
+          server.close(function () {
+            console.log('stop');
+            document.getElementById('start').disabled = false;
+          });
+        }
+      };
+    </script>
+  </head>
+  <body>
+    <h1>本地调试环境</h1>
+    <hr/>
+    <button id='start'>开启服务</button>
+    <button id='stop' disabled="true">关闭服务</button>
+  </body>
+</html>
