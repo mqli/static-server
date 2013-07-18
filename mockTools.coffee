@@ -12,6 +12,7 @@ methods =
   cutString: 'String',
   cutTags: 'String',
   cutTitle: 'String',
+  cutHtmlString: 'String',
   cyclical: 'String',
   cyclicald: 'String',
   cyclicalm: 'String',
@@ -69,7 +70,7 @@ methods =
   ruship: 'String',
   setImageForYaso: 'String',
   urlencode: 'String'
-
+  stripTags:'String'
 
 module.exports = {}
 

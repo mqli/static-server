@@ -1,5 +1,6 @@
 Velocity = require 'velocityjs'
 fs = require 'fs'
+CONFIG = require './config.json'
 #模拟发布器做的vm渲染，先进行一次中文占位符到vm语言的替换，然后用mock的对象和数据渲染页面
 REPLACE_MAP =
   "[链接]": "url"
@@ -23,6 +24,7 @@ MOCK_VALUS =
 REG = /\[[a-zA-Z0-9\u4e00-\u9fa5_]+\]/g
 
 monkObj = get: (key) ->
+  console.log key
   MOCK_VALUS[key] or key
 
 #vm全局对象
@@ -36,8 +38,16 @@ context =
 module.exports = (template) ->
   template = template.replace REG, (key) ->
     if REPLACE_MAP[key] then "${one.get(\"#{REPLACE_MAP[key]}\")}" else key
-  template = template.replace '#parse("/0080/n/0080nph_2.vm")', fs.readFileSync('photo.inc')
+  template = template.replace '#parse("/0080/n/0080nph_2.vm")', fs.readFileSync('./photo.inc')
+
+  marcos = template.match /#macro\s*?\(\s*?(\S*?)\s*\)([\s\S]*?)#end/g
+
+  if marcos then for marco in marcos
+    marco = marco.match  /#macro\s*?\(\s*?(\S*?)\s*\)([\s\S]*?)#end/
+    template = template.replace marco[0], ''
+    template = template.replace new RegExp("##{marco[1]}\\(\\)",'g'), marco[2]
   try
     html = Velocity.render(template, context)
   catch e
+    console.log e
     return template

@@ -46,21 +46,25 @@ resolve_include = (html, path, cb)->
         path_cms = /\/(\d{4})\S*\//.exec(url)
         if path_cms then domain = DOMAINS[path_cms[1]]
       if !domain
-        path = path.substring(1)
-        domain = "http://#{path[0...path.indexOf('/')]}.163.com"
+        _path = path.substring(1)
+        domain = "http://#{_path[0..._path.indexOf('/')]}.163.com"
+
       url = "#{domain}#{url}"
       request.get {
         url: url
         encoding: 'binary'
       }, (err, res, remote_html)->
-        console.log url,path, err or res.statusCode
         len--
+        console.log url,path, err or res.statusCode
+        if err
+          cb(html) if len == 0
+          return
         #is_GBK = res.headers['content-type'].indexOf('GBK') >= 0
         console.log  res.headers['content-type']
         remote_html = iconv.decode(new Buffer(remote_html, 'binary'), 'gbk')
         resolve_include remote_html, path, (inc)->
           process.nextTick ()->
-            html = html.replace match, inc.toString('utf8')
+            html = html.replace match, vmrender(inc.toString('utf8'))
             cb(html) if len == 0
     match
   cb(html) if len == 0
