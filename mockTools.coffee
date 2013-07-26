@@ -47,7 +47,7 @@ methods =
   getMobileUrl: 'String',
   getNongli: 'String',
   getPhotoBigImgsrc: 'String',
-  getProperty: 'String',
+  getProperty: 'String',#返回第二个参数的字段
   getRealContentJson: 'String',
   getReplacedBody: 'String',
   getSource: 'String',

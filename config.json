@@ -1,6 +1,7 @@
 {
   "port": 80,
   "dir": "d:/workspace/fontend",
+  "index": "xxx.html",
   "proxy": {
     "push.netease.com": "http://127.0.0.1:8080"
   }

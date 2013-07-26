@@ -79,7 +79,9 @@ app = connect()
           'Content-Type': 'text/html;charset=utf8'
         res.end(html)
     else next()
-  .use(connect.static(CONFIG.dir))
+  .use(connect.static(CONFIG.dir,{
+    index: CONFIG.index
+  }))
   .use(connect.directory(CONFIG.dir))
 http.createServer(app).listen CONFIG.port, ()->
   console.log 'listening:', CONFIG.port
