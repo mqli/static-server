@@ -6,9 +6,9 @@ request = require 'request'
 iconv = require 'iconv-lite'
 proxy = require './proxy'
 vmrender = require './vmrender'
-CONFIG = require './config.json'
+CONFIG = require '../config.json'
 
-DOMAINS = fs.readFileSync('domain_map')
+DOMAINS = fs.readFileSync('./lib/domain_map')
   .toString()
   .split('\n')
   .reduce (map, str)->

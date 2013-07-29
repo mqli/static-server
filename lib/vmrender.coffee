@@ -1,7 +1,7 @@
 Velocity = require 'velocityjs'
 fs = require 'fs'
 mocking = require './mocking'
-CONFIG = require './config.json'
+CONFIG = require '../config.json'
 
 #模拟发布器做的vm渲染，先进行一次中文占位符到vm语言的替换，然后用mock的对象和数据渲染页面
 REPLACE_MAP =
@@ -57,7 +57,7 @@ module.exports = (template) ->
   template = template.replace /<script.*?>([\w\W]*?)<\/script>/g, ()->
     arguments[0].replace(/#/g, '#[[#]]#')
      .replace /\$/g, '#[[$]]#'
-  template = template.replace '#parse("/0080/n/0080nph_2.vm")', fs.readFileSync('./photo.inc')
+  template = template.replace '#parse("/0080/n/0080nph_2.vm")', fs.readFileSync('./lib/photo.inc')
   template = template.replace '#parse("/0080/w/0080wb_public.vm")', """
     <link href="http://img1.cache.netease.com/utf8/microblog/plugin/css/wb2.0.8.css" charset="utf-8" type="text/css" rel="stylesheet">
     <script type="text/javascript" src="http://img1.cache.netease.com/utf8/microblog/plugin/js/wb2.2.7.js " charset="utf-8"></script>

@@ -1,1 +1,1 @@
-node_modules\.bin\coffee server.coffee
+node_modules\.bin\node index.js
