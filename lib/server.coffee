@@ -40,7 +40,9 @@ resolve_include = (html, path, cb)->
           cb(html) if len == 0
     else
       cms_meta = /meta name="cms_id" content="(\d{4})\S+" \/>/.exec html
-      cms_id = if cms_meta then cms_meta[0] else null
+
+      cms_id = if cms_meta then cms_meta[1] else null
+
       if cms_id then domain = DOMAINS[cms_id]
       if !domain
         path_cms = /\/(\d{4})\S*\//.exec(url)
@@ -53,6 +55,7 @@ resolve_include = (html, path, cb)->
       request.get {
         url: url
         encoding: 'binary'
+        followRedirect: false
       }, (err, res, remote_html)->
         len--
         console.log url,path, err or res.statusCode

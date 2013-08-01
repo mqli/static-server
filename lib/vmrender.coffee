@@ -22,6 +22,8 @@ MOCK_VALUS =
   'imagesrc': 'http://img4.cache.netease.com/stock/2012/10/30/2012103010122251732.jpg'
   'digest': '摘要摘要摘要'
   'stitle': '副标题'
+  'hot_src':'http://img4.cache.netease.com/photo/0008/2013-05-21/120x90_8VDRPD3U29NB0008.jpg'
+  'original_name':'荣威550'
 #匹配中文占位符
 REG = /\[[a-zA-Z0-9\u4e00-\u9fa5_]+\]/g
 
@@ -47,6 +49,12 @@ context =
         ), parseInt(args.listnum) || 2)()
 
       [monkObj,monkObj,monkObj]
+  pdtag:
+    getPriceInternal: ->
+      get: ->
+        [monkObj,monkObj,monkObj]
+    getAutoSeriesInfoByID: (arg)->
+      name: arg
   tools: require './mockTools'
   comment: '<!--#include virtual="/comment/0005/sports_zh_bbs/1P/93VI8G1P00051CDG.html"-->'
 
