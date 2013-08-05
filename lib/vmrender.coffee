@@ -10,10 +10,10 @@ REPLACE_MAP =
   "[标题]": "title"
   "[3G标题]": "mtitle"
   "[副标题]": "stitle"
-  '[摘要]': "digest",
-  '[3G标题]': "mtitle",
-  '[来源]': "source",
-  '[个人履历]': "title",
+  '[摘要]': "digest"
+  '[3G标题]': "mtitle"
+  '[来源]': "source"
+  '[个人履历]': "title"
   '[文章ID]': "docid" 
 
 MOCK_VALUS = 
@@ -57,6 +57,9 @@ context =
       name: arg
   tools: require './mockTools'
   comment: '<!--#include virtual="/comment/0005/sports_zh_bbs/1P/93VI8G1P00051CDG.html"-->'
+
+for file in fs.readdirSync(__dirname + '/../plugins') when file.indexOf('.js') == file.length - 3
+  context[file[0...file.length - 3]] = require '../plugins/' + file
 
 module.exports = (template) ->
   template = template.replace REG, (key) ->
