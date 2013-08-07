@@ -2,7 +2,7 @@ Velocity = require 'velocityjs'
 fs = require 'fs'
 mocking = require './mocking'
 CONFIG = require '../config.json'
-
+PARSES = require './parse.json'
 #模拟发布器做的vm渲染，先进行一次中文占位符到vm语言的替换，然后用mock的对象和数据渲染页面
 REPLACE_MAP =
   "[链接]": "url"
@@ -64,22 +64,23 @@ for file in fs.readdirSync(__dirname + '/../plugins') when file.indexOf('.js') =
 module.exports = (template) ->
   template = template.replace REG, (key) ->
     if REPLACE_MAP[key] then "${one.get(\"#{REPLACE_MAP[key]}\")}" else key
-  template = template.replace /##.+\r/g ,''
-  template = template.replace /<script.*?>([\w\W]*?)<\/script>/g, ()->
+  template = template.replace /##.+\r/g ,'' #comment
+  template = template.replace /<script.*?>([\w\W]*?)<\/script>/g, ()-> # '#' in script
     arguments[0].replace(/#/g, '#[[#]]#')
      .replace /\$/g, '#[[$]]#'
   template = template.replace '#parse("/0080/n/0080nph_2.vm")', fs.readFileSync('./lib/photo.inc')
-  template = template.replace '#parse("/0080/w/0080wb_public.vm")', """
-    <link href="http://img1.cache.netease.com/utf8/microblog/plugin/css/wb2.0.8.css" charset="utf-8" type="text/css" rel="stylesheet">
-    <script type="text/javascript" src="http://img1.cache.netease.com/utf8/microblog/plugin/js/wb2.2.7.js " charset="utf-8"></script>
-    <script type="text/javascript" src="http://img1.cache.netease.com/utf8/microblog/plugin/js/wbshare1.0.3.js" charset="utf-8"></script>
-  """
+  
+  template = template.replace '#parse\\("(.*?)"\\)', (match, path)->
+    path = path.substring(1) if path.charAt(0) == '/'
+    console.log 'parse', path
+    PARSES[path]
+  # marcos
   marcos = template.match /#macro\s*?\(\s*?(\S*?)\s*\)([\s\S]*?)#end/g
-
   if marcos then for marco in marcos
     marco = marco.match  /#macro\s*?\(\s*?(\S*?)\s*\)([\s\S]*?)#end/
     template = template.replace marco[0], ''
     template = template.replace new RegExp("##{marco[1]}\\(\\)",'g'), marco[2]
+
   try
     html = Velocity.render(template, context)
   catch e
