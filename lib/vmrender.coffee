@@ -45,10 +45,22 @@ context =
         return mocking.array(mocking.object(
           title: mocking.string(mocking.int(3, parseInt(args.titlelength) || 3), "标题"),
           digest: mocking.string(mocking.int(3, parseInt(args.digestlength) || 10), "摘要"),
-          get: ()-> return (key)-> this[key] or MOCK_VALUS[key] or key
+          get: ()-> (key)-> this[key] or MOCK_VALUS[key] or key
         ), parseInt(args.listnum) || 2)()
 
       [monkObj,monkObj,monkObj]
+    getTopPV: ()->
+      return mocking.array(mocking.object(
+        num: 0
+        title: mocking.string(mocking.int(10, 20), "标题")
+        get: ()-> (key)-> this[key] or MOCK_VALUS[key] or key
+      ), arguments[arguments.length - 1] || 2)()
+    getBbsRank:  ()->
+      return mocking.array(mocking.object(
+        rcount: 0
+        title: mocking.string(mocking.int(10, 20), "标题")
+        get: ()-> (key)-> this[key] or MOCK_VALUS[key] or key
+      ), arguments[arguments.length - 2] || 2)()
   pdtag:
     getPriceInternal: ->
       get: ->

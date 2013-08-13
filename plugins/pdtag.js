@@ -21,7 +21,15 @@ var carpkObj={
   minautoid:"2339",
   maxautoid:"2064"  
 }
-
+var priceoffObj={
+  title:"[西安]别克凯越现金优惠1.8万元",
+  link:"http://product.auto.163.com/series/3159.html",
+  serieurl:"http://product.auto.163.com/series/3159.html",
+  name:"科鲁兹",
+  photourl:"http://img3.cache.netease.com/photo/0008/2013-05-10/120x90_8UHHPM2H29610008.png",
+  pricearea:"14.9~24.9",
+  priceareaurl:"http://product.auto.163.com/dealer/search/0_0_1752_3159_0_1.html#0008B12" 
+};
 module.exports = {
   getPriceInternal: function(){
     return {
@@ -44,5 +52,12 @@ module.exports = {
         return [carpkObj,carpkObj,carpkObj,carpkObj,carpkObj];
       }
     }
+  },
+  getFallPriceInfo:function(num){
+    var arr = [];
+    for(var i=0;i<num;i++){
+      arr.push(priceoffObj);
+    }
+    return arr;
   }
 }

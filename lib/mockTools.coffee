@@ -78,4 +78,5 @@ Object.keys(methods).forEach (name)->
   module.exports[name] = (arg)->
     console.log name, type
     if type == 'Number' then 1 else arg
+  module.exports.createMap = ()-> {}
   module.exports.isFine = ()-> true

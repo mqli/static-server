@@ -4,9 +4,19 @@ http = require 'http'
 pathUtil = require 'path'
 request = require 'request'
 iconv = require 'iconv-lite'
+cheerio = require 'cheerio'
 proxy = require './proxy'
 vmrender = require './vmrender'
 CONFIG = require '../config.json'
+version = require('../package.json').version
+VERSION_URL = 'http://qa.developer.163.com/component/server/server.html'
+
+need_update = false
+request VERSION_URL, (err, res, html)->
+  console.log err if err
+  if html
+    $ = cheerio.load html
+    need_update = $('#version').text() != version
 
 DOMAINS = fs.readFileSync('./lib/domain_map')
   .toString()
@@ -75,11 +85,21 @@ resolve_include = (html, path, cb)->
 app = connect()
   .use(proxy(CONFIG.proxy))
   .use (req, res, next)->
-    if req.url.indexOf('html') > 0 or req.url.indexOf('shtml') > 0
-      html = render_local req.url
-      resolve_include html, req.url,(html)->
+    url = req.url.split('?')[0]
+    if url.indexOf('html')  == url.length - 4
+      html = render_local url
+      return next() if !html
+      resolve_include html, url,(html)->
         res.writeHead 200, 
           'Content-Type': 'text/html;charset=utf8'
+        if need_update and CONFIG.check_update != false
+          html = html.replace '<body>', """
+            <body>
+            <div style="width:100%;background-color:yellow">
+              <a href="http://tools.f2e.netease.com/server.zip">本工具有新版本，请升级</a>
+              <a onclick="this.parentNode.parentNode.removeChild(this.parentNode);">x</a>
+            </div>
+          """
         res.end(html)
     else next()
   .use(connect.static(CONFIG.dir,{
