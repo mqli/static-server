@@ -24,6 +24,7 @@ MOCK_VALUS =
   'stitle': '副标题'
   'hot_src':'http://img4.cache.netease.com/photo/0008/2013-05-21/120x90_8VDRPD3U29NB0008.jpg'
   'original_name':'荣威550'
+  'ptime' : '2013-8-16'
 #匹配中文占位符
 REG = /\[[a-zA-Z0-9\u4e00-\u9fa5_]+\]/g
 

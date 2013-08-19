@@ -40,17 +40,18 @@ resolve_include = (html, path, cb)->
   html = html.replace /<!--\s*#include (\S+)="(\S+)"\s*-->/g, (match, cmd , url, index)->
     console.log match
     len++
+
     local_url = if url.indexOf('/') is 0 then url else path[0...path.lastIndexOf('/')] + '/' + url
+
     local_html = render_local local_url
     if local_html
-      resolve_include local_html, path, (inc)->
+      resolve_include local_html, local_url, (inc)->
         process.nextTick ()->
           html = html.replace match, inc
           len--
           cb(html) if len == 0
     else
       cms_meta = /meta name="cms_id" content="(\d{4})\S+" \/>/.exec html
-
       cms_id = if cms_meta then cms_meta[1] else null
 
       if cms_id then domain = DOMAINS[cms_id]
@@ -72,10 +73,7 @@ resolve_include = (html, path, cb)->
         if err
           cb(html) if len == 0
           return
-        #is_GBK = res.headers['content-type'].indexOf('GBK') >= 0
-        console.log  res.headers['content-type']
-        remote_html = iconv.decode(new Buffer(remote_html, 'binary'), 'gbk')
-        resolve_include remote_html, path, (inc)->
+        resolve_include iconv.decode(new Buffer(remote_html, 'binary'), 'gbk'), path, (inc)->
           process.nextTick ()->
             html = html.replace match, vmrender(inc.toString('utf8'))
             cb(html) if len == 0
@@ -106,6 +104,5 @@ app = connect()
     index: CONFIG.index
   }))
   .use(connect.directory(CONFIG.dir))
-http.createServer(app).listen CONFIG.port, ()->
+module.exports = http.createServer(app).listen CONFIG.port, ()->
   console.log 'listening:', CONFIG.port
-  module.exports = app

@@ -80,3 +80,5 @@ Object.keys(methods).forEach (name)->
     if type == 'Number' then 1 else arg
   module.exports.createMap = ()-> {}
   module.exports.isFine = ()-> true
+  module.exports.subString =  (arg)-> arg
+  module.exports.getFirstPic = (arg)-> 'http://img4.cache.netease.com/stock/2012/10/30/2012103010122251732.jpg'

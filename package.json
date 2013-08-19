@@ -1,5 +1,16 @@
 {
   "name": "nw-demo",
   "main": "index.html",
-  "version": "0.3.0"
+  "version": "0.3.0",
+  "dependencies":{
+    "cheerio":"~",
+    "request":"~",
+    "coffee-script":"~",
+    "connect":"~",
+    "iconv-lite":"~",
+    "less":"~",
+    "mcss":"~",
+    "velocityjs":"~",
+    "watch":"~"
+  }
 }
