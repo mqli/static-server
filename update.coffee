@@ -2,7 +2,7 @@ cheerio = require 'cheerio'
 request = require 'request'
 fs = require 'fs'
 
-BASE_URL = 'http://qa.developer.163.com/component/server'
+BASE_URL = 'http://qa.developer.163.com/component/server/'
 
 file_amount = 0
 
