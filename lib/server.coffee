@@ -18,7 +18,7 @@ request VERSION_URL, (err, res, html)->
     $ = cheerio.load html
     need_update = $('#version').text() != version
 
-DOMAINS = fs.readFileSync('./lib/domain_map')
+DOMAINS = fs.readFileSync(__dirname + '/../lib/domain_map')
   .toString()
   .split('\n')
   .reduce (map, str)->
@@ -104,5 +104,11 @@ app = connect()
     index: CONFIG.index
   }))
   .use(connect.directory(CONFIG.dir))
-module.exports = http.createServer(app).listen CONFIG.port, ()->
-  console.log 'listening:', CONFIG.port
+server = null;
+exports.run = (cb, on_error)->
+  server = http.createServer(app)
+  server.on 'error', (err)->
+    on_error and on_error(err)
+  server.listen CONFIG.port, cb
+exports.close = (cb)->
+  server.close(cb) if server

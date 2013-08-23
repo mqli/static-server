@@ -1,0 +1,32 @@
+<!doctype>
+<html>
+  <head>
+    <script type="text/javascript">
+      require('coffee-script');
+      var server = require('./lib/server.coffee');
+      var run_button;
+      var run_server = function (argument) {
+        run_button.onclick = null;
+        server.run(function () {
+          run_button.innerHTML = 'stop';
+          run_button.onclick = stop_server;
+        });
+      };
+      var stop_server = function (argument) {
+        run_button.onclick = null;
+        server.close(function () {
+            run_button.innerHTML = 'run';
+            run_button.onclick = run_server;
+        });
+      }
+      window.onload = function () {
+        run_button = document.getElementById('run');
+        run_button.onclick = run_server;
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Goodda</h1>
+    <button id="run">run</button>
+  </body>
+</html>

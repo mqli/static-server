@@ -96,6 +96,7 @@ module.exports = (template) ->
 
   try
     html = Velocity.render(template, context)
+    #console.log html
   catch e
     console.log e
     return template
