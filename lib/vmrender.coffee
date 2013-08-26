@@ -69,7 +69,7 @@ context =
     getAutoSeriesInfoByID: (arg)->
       name: arg
   tools: require './mockTools'
-  comment: '<!--#include virtual="/comment/0005/sports_zh_bbs/1P/93VI8G1P00051CDG.html"-->'
+  comment: fs.readFileSync(__dirname + '/comment.inc').toString()
 
 for file in fs.readdirSync(__dirname + '/../plugins') when file.indexOf('.js') == file.length - 3
   context[file[0...file.length - 3]] = require '../plugins/' + file

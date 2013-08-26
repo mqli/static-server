@@ -40,9 +40,9 @@ resolve_include = (html, path, cb)->
   html = html.replace /<!--\s*#include (\S+)="(\S+)"\s*-->/g, (match, cmd , url, index)->
     console.log match
     len++
-
     local_url = if url.indexOf('/') is 0 then url else path[0...path.lastIndexOf('/')] + '/' + url
-
+    if url.indexOf('.') is 0
+      local_url = pathUtil.join pathUtil.dirname(path), url
     local_html = render_local local_url
     if local_html
       resolve_include local_html, local_url, (inc)->
@@ -51,7 +51,7 @@ resolve_include = (html, path, cb)->
           len--
           cb(html) if len == 0
     else
-      cms_meta = /meta name="cms_id" content="(\d{4})\S+" \/>/.exec html
+      cms_meta = /meta name="cms_id" content="(\d{4})\S+"/.exec html
       cms_id = if cms_meta then cms_meta[1] else null
 
       if cms_id then domain = DOMAINS[cms_id]
@@ -61,7 +61,6 @@ resolve_include = (html, path, cb)->
       if !domain
         _path = path.substring(1)
         domain = "http://#{_path[0..._path.indexOf('/')]}.163.com"
-
       url = "#{domain}#{url}"
       request.get {
         url: url
@@ -84,7 +83,8 @@ app = connect()
   .use(proxy(CONFIG.proxy))
   .use (req, res, next)->
     url = req.url.split('?')[0]
-    if url.indexOf('html')  == url.length - 4
+    if url.lastIndexOf('html')  == url.length - 4
+
       html = render_local url
       return next() if !html
       resolve_include html, url,(html)->
