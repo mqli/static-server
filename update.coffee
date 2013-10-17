@@ -18,7 +18,7 @@ update_file = (url)->
       run_server() if file_amount == 0
       return
     console.log 'update file:', url
-    fs.writeFileSync(__dirname + '/' + url, html)
+    #fs.writeFileSync(__dirname + '/' + url, html)
     run_server() if file_amount == 0
 
 check_update = (cb)->

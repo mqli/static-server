@@ -70,6 +70,10 @@ context =
       name: arg
   tools: require './mockTools'
   comment: fs.readFileSync(__dirname + '/comment.inc').toString()
+  pages: 5
+  thisPageNo:2
+  thepage:'#'
+  bar:['','','#','','']
 
 for file in fs.readdirSync(__dirname + '/../plugins') when file.indexOf('.js') == file.length - 3
   context[file[0...file.length - 3]] = require '../plugins/' + file
@@ -81,22 +85,49 @@ module.exports = (template) ->
   template = template.replace /<script.*?>([\w\W]*?)<\/script>/g, ()-> # '#' in script
     arguments[0].replace(/#/g, '#[[#]]#')
      .replace /\$/g, '#[[$]]#'
-  template = template.replace '#parse("/0080/n/0080nph_2.vm")', fs.readFileSync('./lib/photo.inc')
+  template = template.replace /\(ThePills\)-->/g, ''
+  template = template.replace /<\!--\(ThePills\)/g, ''
+  template = template.replace '#parse("/0080/n/0080nph_2.vm")', fs.readFileSync(__dirname + '/photo.inc')
   
-  template = template.replace '#parse\\("(.*?)"\\)', (match, path)->
+  template = template.replace /#parse\("(.*?)"\)/g, (match, path)->
+    console.log 1111111111111111111111111,path
     path = path.substring(1) if path.charAt(0) == '/'
     console.log 'parse', path
     PARSES[path]
-  # marcos
+  ###
   marcos = template.match /#macro\s*?\(\s*?(\S*?)\s*\)([\s\S]*?)#end/g
   if marcos then for marco in marcos
     marco = marco.match  /#macro\s*?\(\s*?(\S*?)\s*\)([\s\S]*?)#end/
     template = template.replace marco[0], ''
     template = template.replace new RegExp("##{marco[1]}\\(\\)",'g'), marco[2]
-
+  ###
+  template = macro_replace template
   try
     html = Velocity.render(template, context)
     #console.log html
   catch e
     console.log e
     return template
+
+
+macro_replace = (src)->
+  macro_reg = /#macro\s*?\(\s*?(\S*?)\s*\)([\s\S]*?)/g
+  replaces = {}
+  while match = macro_reg.exec src
+    end_rep = /#end|#if|#foreach/g
+    count = 0
+    while end = end_rep.exec src
+      continue if end.index <= match.index 
+      if end[0] == '#end' and count == 0 
+        break
+      if end[0] == '#end'
+        count--
+      else
+        count++
+
+    replaces['#' + match[1] + '\\(\\)'] = src.substring(match.index + match[0].length, end.index)
+  
+  for key,value of replaces
+    src = src.replace new RegExp(key,'g'),value
+  
+  src

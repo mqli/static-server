@@ -51,7 +51,7 @@ resolve_include = (html, path, cb)->
           len--
           cb(html) if len == 0
     else
-      cms_meta = /meta name="cms_id" content="(\d{4})\S+"/.exec html
+      cms_meta = /meta name="cms_id" content="(\d{4})\S*"/.exec html
       cms_id = if cms_meta then cms_meta[1] else null
 
       if cms_id then domain = DOMAINS[cms_id]

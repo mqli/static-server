@@ -1,5 +1,17 @@
-request = require 'request'
+html = '''
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="cms_id" content="0029" />
+<title>fdtemple</title>
+</head>
+<body>
+<!--#include virtual="/special/banner13_top.html" -->
+</body>
+</html>
 
-url = 'http://finance.163.com/special/sp/stock13_column5.html'
-request url:url,followRedirect:false, (err, res)->
-  console.log  res.statusCode
+'''
+
+console.log /meta name="cms_id" content="(\d{4})\S*"/.exec html
+
